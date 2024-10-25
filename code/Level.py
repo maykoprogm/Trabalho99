@@ -18,7 +18,8 @@ from code.Player import Player
 
 class Level:
     def __init__(self, window: Surface, name: str, game_mode: str, player_score: list[int]):
-        self.timeout = TIMEOUT_LEVEL
+
+        self.timeout = TIMEOUT_LEVEL * 2 if name == 'Level3' else TIMEOUT_LEVEL
         self.window = window
         self.name = name
         self.game_mode = game_mode
@@ -27,10 +28,13 @@ class Level:
         player = EntityFactory.get_entity('Player1')
         player.score = player_score[0]
         self.entity_list.append(player)
+
         if game_mode in [MENU_OPTION[1], MENU_OPTION[2]]:
             player = EntityFactory.get_entity('Player2')
             player.score = player_score[1]
             self.entity_list.append(player)
+
+
         pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
         pygame.time.set_timer(EVENT_TIMEOUT, TIMEOUT_STEP)  # 100ms
 
@@ -59,6 +63,7 @@ class Level:
                 if event.type == EVENT_ENEMY:
                     choice = random.choice(('Enemy1', 'Enemy2', 'Enemy3'))
                     self.entity_list.append(EntityFactory.get_entity(choice))
+
                 if event.type == EVENT_TIMEOUT:
                     self.timeout -= TIMEOUT_STEP
                     if self.timeout == 0:
